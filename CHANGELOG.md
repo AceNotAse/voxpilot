@@ -2,6 +2,19 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.164] - 2026-07-02
+
+### Added
+- Settings migration — auto-migrate deprecated settings with backward compatibility layer
+- `SettingsMigrationManager` class handles version-to-version settings changes
+- Built-in migration rules for 0.7.x → 0.8.x and 0.8.x → 0.9.x transitions
+- Value transformers for non-trivial setting format changes (e.g. seconds → milliseconds)
+- Migration history tracking with rollback capability
+- `checkNeeded()` — detect outdated settings without applying changes
+- `getApplicableRules()` — find relevant migrations for any version range
+- `compareVersions()` — semantic version comparison utility
+- Migration summary shown to user on first run after update
+
 ## [0.7.163] - 2026-07-01
 
 ### Added
