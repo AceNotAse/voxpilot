@@ -2,6 +2,20 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.165] - 2026-07-03
+
+### Added
+- Security audit — dependency scan, CSP for webviews, secret handling review
+- `runSecurityAudit()` performs full security assessment with scoring (0-100)
+- Content Security Policy enforcement for all webview panels (strict, no eval)
+- Secret detection scanner — flags API keys/tokens accidentally stored in settings
+- Input sanitization utilities for safe webview HTML rendering
+- Webview message validation against expected command schemas
+- `generateCsp()` / `generateNonce()` helpers for strict CSP generation
+- `formatSecurityReport()` exports audit results as markdown
+- New command: `voxpilot.runSecurityAudit` — run full security audit with webview results panel
+- Checks cover: CSP, secrets, dependencies, permissions, and input validation
+
 ## [0.7.164] - 2026-07-02
 
 ### Added

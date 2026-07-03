@@ -455,6 +455,11 @@
         "icon": "$(filter)"
       },
       {
+        "command": "voxpilot.runSecurityAudit",
+        "title": "VoxPilot: Run Security Audit",
+        "icon": "$(shield)"
+      },
+      {
         "command": "voxpilot.showMemoryStatus",
         "title": "VoxPilot: Show Memory Status",
         "icon": "$(dashboard)"

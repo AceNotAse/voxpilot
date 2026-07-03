@@ -35,6 +35,7 @@ import { batchTranscription } from './batchTranscription';
 import { performanceAudit, PerformanceAudit } from './performanceAudit';
 import { memoryOptimizer, MemoryOptimizer } from './memoryOptimization';
 import { runAllTests, formatReport, getTestCategories, getTestCount } from './integrationTests';
+import { runSecurityAudit, formatSecurityReport, scanForSecrets, generateCsp, generateNonce, STRICT_CSP } from './securityAudit';
 
 let engine: VoxPilotEngine | undefined;
 let statusBar: StatusBarManager;
@@ -160,6 +161,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<VoxPil
     vscode.commands.registerCommand('voxpilot.clearPerformanceAudit', () => { performanceAudit.clear(); vscode.window.showInformationMessage('VoxPilot: Performance audit data cleared.'); }),
     vscode.commands.registerCommand('voxpilot.runIntegrationTests', () => runIntegrationTestsCommand(context)),
     vscode.commands.registerCommand('voxpilot.runIntegrationTestsCategory', () => runIntegrationTestsCategoryCommand(context)),
+    vscode.commands.registerCommand('voxpilot.runSecurityAudit', () => runSecurityAuditCommand(context)),
     registerAiCodeGenerationCommand(context),
     treeView,
     configWatcher,
@@ -1233,5 +1235,74 @@ async function runIntegrationTestsCategoryCommand(context: vscode.ExtensionConte
 
   vscode.window.showInformationMessage(
     `${statusIcon} ${pick.label}: ${suite.passed}/${suite.total - suite.skipped} passed, ${suite.failed} failed (${suite.durationMs}ms)`,
+  );
+}
+
+function runSecurityAuditCommand(context: vscode.ExtensionContext): void {
+  const pkg = JSON.parse(fs.readFileSync(path.join(context.extensionPath, 'package.json'), 'utf-8'));
+  const report = runSecurityAudit(pkg.version);
+  const markdown = formatSecurityReport(report);
+
+  // Also scan current workspace settings for potential secret exposure
+  const config = vscode.workspace.getConfiguration('voxpilot');
+  const allSettings: Record<string, unknown> = {};
+  for (const key of Object.keys(config)) {
+    const val = config.get(key);
+    if (val !== undefined) { allSettings[key] = val; }
+  }
+  const secretFindings = scanForSecrets(allSettings);
+
+  const panel = vscode.window.createWebviewPanel(
+    'voxpilotSecurityAudit',
+    'VoxPilot Security Audit',
+    vscode.ViewColumn.One,
+    { enableScripts: false },
+  );
+
+  const nonce = generateNonce();
+  const csp = generateCsp(STRICT_CSP, nonce);
+  const scoreColor = report.score >= 90 ? '#4caf50' : report.score >= 70 ? '#ff9800' : '#f44336';
+
+  panel.webview.html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="${csp}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Audit</title>
+  <style>
+    body { font-family: var(--vscode-font-family); padding: 20px; color: var(--vscode-foreground); }
+    .score { font-size: 48px; font-weight: bold; color: ${scoreColor}; }
+    .check { margin: 8px 0; padding: 8px; border-radius: 4px; background: var(--vscode-editor-background); }
+    .pass { border-left: 4px solid #4caf50; }
+    .warning { border-left: 4px solid #ff9800; }
+    .fail { border-left: 4px solid #f44336; }
+    .summary { display: flex; gap: 20px; margin: 16px 0; }
+    .summary-item { padding: 12px; border-radius: 4px; background: var(--vscode-editor-background); }
+    h1, h2, h3 { color: var(--vscode-foreground); }
+    .recommendations li { margin: 4px 0; }
+    .secret-warning { background: #f4433620; padding: 12px; border-radius: 4px; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔒 VoxPilot Security Audit</h1>
+  <p>Version: ${report.version} | ${new Date(report.timestamp).toLocaleString()}</p>
+  <div class="score">${report.score}/100</div>
+  <div class="summary">
+    <div class="summary-item">✅ ${report.summary.pass} passed</div>
+    <div class="summary-item">⚠️ ${report.summary.warning} warnings</div>
+    <div class="summary-item">❌ ${report.summary.fail} failed</div>
+  </div>
+  <h2>Checks</h2>
+  ${report.checks.map(c => `<div class="check ${c.status}"><strong>${c.status === 'pass' ? '✅' : c.status === 'warning' ? '⚠️' : '❌'} ${c.name}</strong> (severity: ${c.severity}/10)<br/>${c.description}${c.details ? `<br/><em>${c.details}</em>` : ''}</div>`).join('')}
+  ${secretFindings.length > 0 ? `<h2>⚠️ Secret Exposure Findings</h2>${secretFindings.map(f => `<div class="secret-warning"><strong>${f.key}</strong>: ${f.risk}</div>`).join('')}` : ''}
+  <h2>Recommendations</h2>
+  <ul class="recommendations">${report.recommendations.map(r => `<li>${r}</li>`).join('')}</ul>
+</body>
+</html>`;
+
+  const statusIcon = report.score >= 90 ? '✅' : report.score >= 70 ? '⚠️' : '❌';
+  vscode.window.showInformationMessage(
+    `${statusIcon} Security Audit: ${report.score}/100 — ${report.summary.pass} passed, ${report.summary.warning} warnings, ${report.summary.fail} failed`,
   );
 }
