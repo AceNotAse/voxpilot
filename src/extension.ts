@@ -36,6 +36,7 @@ import { performanceAudit, PerformanceAudit } from './performanceAudit';
 import { memoryOptimizer, MemoryOptimizer } from './memoryOptimization';
 import { runAllTests, formatReport, getTestCategories, getTestCount } from './integrationTests';
 import { runSecurityAudit, formatSecurityReport, scanForSecrets, generateCsp, generateNonce, STRICT_CSP } from './securityAudit';
+import { initReleaseCandidate, registerRCCommands } from './releaseCandidate';
 
 let engine: VoxPilotEngine | undefined;
 let statusBar: StatusBarManager;
@@ -60,6 +61,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<VoxPil
   enterpriseSSO.init(context);
   telemetryBridge.init(context);
   usageAnalytics.init(context);
+  initReleaseCandidate(context);
   marketplaceClient.init(context);
   speakerProfileManager.init(context);
   batchTranscription.init(context);
@@ -162,6 +164,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<VoxPil
     vscode.commands.registerCommand('voxpilot.runIntegrationTests', () => runIntegrationTestsCommand(context)),
     vscode.commands.registerCommand('voxpilot.runIntegrationTestsCategory', () => runIntegrationTestsCategoryCommand(context)),
     vscode.commands.registerCommand('voxpilot.runSecurityAudit', () => runSecurityAuditCommand(context)),
+    ...registerRCCommands(context),
     registerAiCodeGenerationCommand(context),
     treeView,
     configWatcher,

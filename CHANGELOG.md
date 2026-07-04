@@ -2,6 +2,18 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.166] - 2026-07-04
+
+### Added
+- Release candidate mode — feature freeze enforcement, bug-fix-only gate
+- `initReleaseCandidate()` activates RC status bar indicator during freeze period
+- `isChangeAllowed(category)` gate blocks feature/refactor changes, allows bugfix/docs/test/perf
+- `isReadyForGA()` checks all blockers before promoting to stable
+- RC status webview panel with checklist, known issues, and resolution tracking
+- Known issues tracker with severity (critical/major/minor) and resolution notes
+- New commands: `voxpilot.showRCStatus`, `voxpilot.checkFreezeGate`, `voxpilot.checkGAReadiness`
+- Changelog finalized for pre-1.0 RC cycle
+
 ## [0.7.165] - 2026-07-03
 
 ### Added

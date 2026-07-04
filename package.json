@@ -468,6 +468,21 @@
         "command": "voxpilot.forceMemoryCleanup",
         "title": "VoxPilot: Force Memory Cleanup",
         "icon": "$(trash)"
+      },
+      {
+        "command": "voxpilot.showRCStatus",
+        "title": "VoxPilot: Show Release Candidate Status",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "voxpilot.checkFreezeGate",
+        "title": "VoxPilot: Check Feature Freeze Gate",
+        "icon": "$(lock)"
+      },
+      {
+        "command": "voxpilot.checkGAReadiness",
+        "title": "VoxPilot: Check GA Readiness",
+        "icon": "$(check-all)"
       }
     ],
     "keybindings": [
