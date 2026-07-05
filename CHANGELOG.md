@@ -2,6 +2,20 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.167] - 2026-07-05
+
+### Added
+- VoxPilot 1.0 RC1 — full regression test, performance benchmarks, docs review
+- `runRC1Suite()` executes the complete RC1 validation: regression tests, benchmarks, docs, commands, settings
+- Performance benchmarks against 1.0 baselines (startup <500ms, pipeline <200ms, model load <3s)
+- 156 regression tests across 13 categories (voice commands, pipeline, error handling, etc.)
+- API documentation completeness review (all public symbols verified)
+- Command registration verification (all 40+ commands checked)
+- Settings schema consistency validation
+- RC1 readiness report with pass/fail status, blockers, and warnings
+- Webview panel for interactive RC1 report display
+- New command: `voxpilot.runRegressionSuite` — run the full 1.0 RC1 validation suite
+
 ## [0.7.166] - 2026-07-04
 
 ### Added
