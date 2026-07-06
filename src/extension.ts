@@ -38,6 +38,7 @@ import { runAllTests, formatReport, getTestCategories, getTestCount } from './in
 import { runSecurityAudit, formatSecurityReport, scanForSecrets, generateCsp, generateNonce, STRICT_CSP } from './securityAudit';
 import { initReleaseCandidate, registerRCCommands } from './releaseCandidate';
 import { registerRegressionCommands } from './regressionTest';
+import { registerRC2Commands } from './communityFeedback';
 
 let engine: VoxPilotEngine | undefined;
 let statusBar: StatusBarManager;
@@ -167,6 +168,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<VoxPil
     vscode.commands.registerCommand('voxpilot.runSecurityAudit', () => runSecurityAuditCommand(context)),
     ...registerRCCommands(context),
     ...registerRegressionCommands(context),
+    ...registerRC2Commands(context),
     registerAiCodeGenerationCommand(context),
     treeView,
     configWatcher,

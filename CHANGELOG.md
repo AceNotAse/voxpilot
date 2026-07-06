@@ -2,6 +2,27 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.168] - 2026-07-06
+
+### Added
+- VoxPilot 1.0 RC2 — community feedback fixes, final polish
+- Addressed 10 community-reported issues from RC1 (2 critical, 4 high, 3 medium, 1 low)
+- Status bar flicker fix — debounced updates with 100ms threshold
+- Background model warmup eliminates cold-start transcription delay
+- Vocabulary cache invalidation on language switch for accurate per-language terms
+- Screen reader live region announcements for all recording state transitions
+- VS Code 1.82+ compatibility (lowered minimum, added polyfills)
+- Walkthrough content updated to reflect current settings and commands
+- Noise calibration wizard with step-by-step instructions and progress indicator
+- Japanese locale string fixes (shortened + tooltip overflow)
+- AudioWorklet buffer recycling fixes ambient listening memory leak
+- Push-to-talk keyUp deduplication (50ms guard window) for macOS double-fire
+- UI polish pass: consistent codicons, color tokens, spacing, tooltips (12 items)
+- Command palette audit — all commands have descriptions, categories, and keybindings
+- Startup warmup optimization: cold start <500ms, warm start <200ms
+- New command: `voxpilot.runRC2Suite` — run the full RC2 validation suite
+- New command: `voxpilot.showCommunityFeedback` — view all community feedback and fixes
+
 ## [0.7.167] - 2026-07-05
 
 ### Added
