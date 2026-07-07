@@ -2,6 +2,22 @@
 
 All notable changes to VoxPilot will be documented in this file.
 
+## [0.7.169] - 2026-07-07
+
+### Added
+- VoxPilot 1.0 GA — stable release, VS Code Marketplace launch, press kit, Product Hunt
+- Promoted from RC2 to General Availability — all RC blockers resolved
+- GA readiness validator: confirms all criteria (regressions, performance, a11y, docs, i18n) pass
+- Press kit webview panel with feature highlights grouped by category (core, productivity, collaboration, enterprise, accessibility)
+- Product Hunt launch banner with dismissable notification
+- First-run 1.0 welcome notification with What's New and Press Kit links
+- VS Code Marketplace metadata generator (badges, categories, keywords)
+- 90+ features stable and documented, 156 regression tests passing
+- Performance baselines met: <500ms cold start, <200ms pipeline latency
+- WCAG 2.1 AA accessible, 5 UI languages (en, es, fr, de, ja, zh)
+- Public Extension API v2 frozen for long-term compatibility
+- New commands: `voxpilot.showPressKit`, `voxpilot.showGAStatus`, `voxpilot.showMarketplaceInfo`
+
 ## [0.7.168] - 2026-07-06
 
 ### Added

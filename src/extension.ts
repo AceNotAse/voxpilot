@@ -39,6 +39,7 @@ import { runSecurityAudit, formatSecurityReport, scanForSecrets, generateCsp, ge
 import { initReleaseCandidate, registerRCCommands } from './releaseCandidate';
 import { registerRegressionCommands } from './regressionTest';
 import { registerRC2Commands } from './communityFeedback';
+import { initGARelease } from './gaRelease';
 
 let engine: VoxPilotEngine | undefined;
 let statusBar: StatusBarManager;
@@ -64,6 +65,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<VoxPil
   telemetryBridge.init(context);
   usageAnalytics.init(context);
   initReleaseCandidate(context);
+  initGARelease(context);
   marketplaceClient.init(context);
   speakerProfileManager.init(context);
   batchTranscription.init(context);
